@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Explorer - City Guide & Booking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: background 0.3s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info span {
+            font-weight: 600;
+        }
+
+        .user-info button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .user-info button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .main-content {
+            padding: 30px;
+            min-height: 600px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid #3498db;
+            font-weight: 600;
+            color: #3498db;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .destination-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .destination-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .destination-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .destination-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .destination-price {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(52, 152, 219, 0.9);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .destination-info {
+            padding: 20px;
+        }
+
+        .destination-name {
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-size: 1.2rem;
+        }
+
+        .destination-location {
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .destination-desc {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .destination-rating {
+            color: #f39c12;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60 0%, #219653 100%);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+
+        .booking-modal,
+        .payment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #2c3e50;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .notification {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .notification.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .notification.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .notification.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .country-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .country-btn {
+            padding: 8px 15px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .country-btn.active,
+        .country-btn:hover {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            padding: 12px 15px;
+            border-radius: 25px;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 15px 0;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .payment-method {
+            flex: 1;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-method:hover {
+            border-color: #3498db;
+        }
+
+        .payment-method.selected {
+            border-color: #3498db;
+            background: #f8f9fa;
+        }
+
+        .payment-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+
+        .payment-details {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .booking-summary {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .summary-total {
+            font-weight: 700;
+            font-size: 1.2rem;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .processing-animation {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .confirmation {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .confirmation-icon {
+            font-size: 4rem;
+            color: #27ae60;
+            margin-bottom: 20px;
+        }
+
+        .india-special {
+            background: linear-gradient(135deg, #FF9933 0%, #FFFFFF 50%, #138808 100%);
+            color: #2c3e50;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .destination-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            nav {
+                flex-wrap: wrap;
+            }
+            nav a {
+                margin: 5px;
+            }
+            .user-info {
+                position: static;
+                justify-content: center;
+                margin-top: 10px;
+            }
+            .payment-methods {
+                flex-direction: column;
+            }
+            .country-filter {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-globe-americas"></i> Global Explorer</h1>
+            <p>Discover amazing destinations around the world and book your next adventure</p>
+
+            <div class="user-info">
+                <span id="welcome-user">Welcome, Traveler!</span>
+                <button id="logout-btn">Logout</button>
+            </div>
+
+            <nav>
+                <a href="#" class="active" data-tab="destinations">All Destinations</a>
+                <a href="#" data-tab="europe">Europe</a>
+                <a href="#" data-tab="asia">Asia</a>
+                <a href="#" data-tab="india">India</a>
+                <a href="#" data-tab="americas">Americas</a>
+                <a href="#" data-tab="my-bookings">My Bookings</a>
+            </nav>
+        </header>
+
+        <div class="main-content">
+            <div class="section">
+                <h2>Popular Tourist Destinations</h2>
+
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Search destinations...">
+                </div>
+
+                <div class="country-filter">
+                    <div class="country-btn active" data-country="all">All Countries</div>
+                    <div class="country-btn" data-country="france">France</div>
+                    <div class="country-btn" data-country="italy">Italy</div>
+                    <div class="country-btn" data-country="spain">Spain</div>
+                    <div class="country-btn" data-country="usa">USA</div>
+                    <div class="country-btn" data-country="japan">Japan</div>
+                    <div class="country-btn" data-country="thailand">Thailand</div>
+                    <div class="country-btn" data-country="india">India</div>
+                </div>
+
+                <div class="destination-grid" id="destination-grid">
+                    <!-- Destination cards will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Global Explorer - Your Travel Companion</p>
+            <div class="footer-links">
+                <a href="#">Contact</a>
+                <a href="#">About</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            <p>&copy; 2023 Global Explorer. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="booking-modal" id="booking-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-booking-modal">&times;</span>
+            <div class="modal-header">
+                <h2 id="modal-title">Book Your Tour</h2>
+            </div>
+
+            <div class="booking-summary">
+                <h3>Booking Summary</h3>
+                <div class="summary-item">
+                    <span>Destination:</span>
+                    <span id="summary-destination">Eiffel Tower, Paris</span>
+                </div>
+                <div class="summary-item">
+                    <span>Date:</span>
+                    <span id="summary-date">Not selected</span>
+                </div>
+                <div class="summary-item">
+                    <span>Travelers:</span>
+                    <span id="summary-travelers">1</span>
+                </div>
+                <div class="summary-item">
+                    <span>Price per person:</span>
+                    <span id="summary-price">$25</span>
+                </div>
+                <div class="summary-item summary-total">
+                    <span>Total:</span>
+                    <span id="summary-total">$25</span>
+                </div>
+            </div>
+
+            <form id="booking-form">
+                <div class="form-group">
+                    <label for="booking-date">Tour Date</label>
+                    <input type="date" id="booking-date" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="booking-people">Number of People</label>
+                    <select id="booking-people" required>
+                        <option value="1">1 Person</option>
+                        <option value="2">2 People</option>
+                        <option value="3">3 People</option>
+                        <option value="4">4 People</option>
+                        <option value="5">5 People</option>
+                        <option value="6">6+ People</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="booking-name">Full Name</label>
+                        <input type="text" id="booking-name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="booking-email">Email</label>
+                        <input type="email" id="booking-email" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="booking-phone">Phone Number</label>
+                    <input type="tel" id="booking-phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="booking-requests">Special Requests</label>
+                    <textarea id="booking-requests" rows="3" placeholder="Any special requirements or preferences..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="btn btn-warning" id="proceed-to-payment">Proceed to Payment</button>
+                </div>
+            </form>
+
+            <div id="booking-notification" class="notification hidden"></div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="payment-modal" id="payment-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-payment-modal">&times;</span>
+            <div class="modal-header">
+                <h2>Complete Your Payment</h2>
+            </div>
+
+            <div class="booking-summary">
+                <h3>Order Summary</h3>
+                <div class="summary-item">
+                    <span>Destination:</span>
+                    <span id="payment-destination">Eiffel Tower, Paris</span>
+                </div>
+                <div class="summary-item">
+                    <span>Date:</span>
+                    <span id="payment-date">Not selected</span>
+                </div>
+                <div class="summary-item">
+                    <span>Travelers:</span>
+                    <span id="payment-travelers">1</span>
+                </div>
+                <div class="summary-item summary-total">
+                    <span>Total Amount:</span>
+                    <span id="payment-total">$25</span>
+                </div>
+            </div>
+
+            <div class="payment-methods">
+                <div class="payment-method" data-method="credit">
+                    <div class="payment-icon">
+                        <i class="far fa-credit-card"></i>
+                    </div>
+                    <div>Credit Card</div>
+                </div>
+                <div class="payment-method" data-method="paypal">
+                    <div class="payment-icon">
+                        <i class="fab fa-paypal"></i>
+                    </div>
+                    <div>PayPal</div>
+                </div>
+                <div class="payment-method" data-method="apple">
+                    <div class="payment-icon">
+                        <i class="fab fa-apple-pay"></i>
+                    </div>
+                    <div>Apple Pay</div>
+                </div>
+            </div>
+
+            <div class="payment-details" id="credit-card-details">
+                <h3>Credit Card Details</h3>
+                <div class="form-group">
+                    <label for="card-number">Card Number</label>
+                    <input type="text" id="card-number" placeholder="1234 5678 9012 3456">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="card-expiry">Expiry Date</label>
+                        <input type="text" id="card-expiry" placeholder="MM/YY">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="card-cvv">CVV</label>
+                        <input type="text" id="card-cvv" placeholder="123">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="card-name">Name on Card</label>
+                    <input type="text" id="card-name" placeholder="John Doe">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="button" class="btn btn-success" id="confirm-payment">Confirm Payment</button>
+            </div>
+
+            <div id="payment-notification" class="notification hidden"></div>
+        </div>
+    </div>
+
+    <!-- Payment Processing Modal -->
+    <div class="payment-modal" id="processing-modal">
+        <div class="modal-content">
+            <div class="processing-animation">
+                <div class="spinner"></div>
+                <h3>Processing Your Payment</h3>
+                <p>Please wait while we process your payment. Do not close this window.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Confirmation Modal -->
+    <div class="payment-modal" id="confirmation-modal">
+        <div class="modal-content">
+            <div class="confirmation">
+                <div class="confirmation-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Payment Successful!</h3>
+                <p>Your booking has been confirmed. A confirmation email has been sent to your email address.</p>
+                <div class="booking-summary" style="margin-top: 20px;">
+                    <h4>Booking Details</h4>
+                    <div class="summary-item">
+                        <span>Booking Reference:</span>
+                        <span id="confirmation-ref">GE-2023-3872</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Destination:</span>
+                        <span id="confirmation-destination">Eiffel Tower, Paris</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Date:</span>
+                        <span id="confirmation-date">October 15, 2023</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Travelers:</span>
+                        <span id="confirmation-travelers">2</span>
+                    </div>
+                    <div class="summary-item summary-total">
+                        <span>Total Paid:</span>
+                        <span id="confirmation-total">$50</span>
+                    </div>
+                </div>
+                <button class="btn btn-success" id="close-confirmation" style="margin-top: 20px;">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Destination data with Indian tourist places
+        const destinations = [{
+                id: 1,
+                name: 'Eiffel Tower',
+                country: 'France',
+                city: 'Paris',
+                description: 'Iconic iron tower offering panoramic city views and dining options. A must-see landmark in Paris.',
+                image: 'images/eiffel-tower.webp',
+                price: 25,
+                rating: 4.8,
+                category: 'europe'
+            }, {
+                id: 2,
+                name: 'Colosseum',
+                country: 'Italy',
+                city: 'Rome',
+                description: 'Ancient amphitheater with guided tours and historical exhibits. Step back in time to the Roman Empire.',
+                image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+                price: 18,
+                rating: 4.7,
+                category: 'europe'
+            }, {
+                id: 3,
+                name: 'Sagrada Familia',
+                country: 'Spain',
+                city: 'Barcelona',
+                description: 'Gaudi\'s masterpiece basilica with unique architecture. An unfinished work of art that continues to evolve.',
+                image: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+                price: 30,
+                rating: 4.9,
+                category: 'europe'
+            }, {
+                id: 4,
+                name: 'Statue of Liberty',
+                country: 'USA',
+                city: 'New York',
+                description: 'Iconic symbol of freedom and democracy. Take a ferry to Liberty Island for an up-close experience.',
+                image: 'https://images.unsplash.com/photo-1548013146-72479768bada?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+                price: 24,
+                rating: 4.6,
+                category: 'americas'
+            }, {
+                id: 5,
+                name: 'Mount Fuji',
+                country: 'Japan',
+                city: 'Tokyo Region',
+                description: 'Japan\'s tallest peak and active volcano. Beautiful in all seasons, especially during cherry blossom season.',
+                image: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+                price: 15,
+                rating: 4.8,
+                category: 'asia'
+            }, {
+                id: 6,
+                name: 'Grand Palace',
+                country: 'Thailand',
+                city: 'Bangkok',
+                description: 'Stunning complex of buildings at the heart of Bangkok. Home to the Emerald Buddha and architectural wonders.',
+                image: 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+                price: 20,
+                rating: 4.5,
+                category: 'asia'
+            },
+            // Indian tourist destinations
+            {
+                id: 7,
+                name: 'Taj Mahal',
+                country: 'India',
+                city: 'Agra',
+                description: 'Iconic white marble mausoleum built by Mughal Emperor Shah Jahan in memory of his wife Mumtaz Mahal.',
+                image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+                price: 20,
+                rating: 4.9,
+                category: 'india'
+            }, {
+                id: 8,
+                name: 'Golden Temple',
+                country: 'India',
+                city: 'Amritsar',
+                description: 'The holiest Gurdwara of Sikhism, known for its stunning golden architecture and community kitchen.',
+                image: 'images/golden-temple.jpg',
+                price: 0,
+                rating: 4.8,
+                category: 'india'
+            }, {
+                id: 9,
+                name: 'Red Fort',
+                country: 'India',
+                city: 'Delhi',
+                description: 'Historic fort built by Mughal Emperor Shah Jahan. A UNESCO World Heritage Site and symbol of India.',
+                image: 'images/red-fort.jpg',
+                price: 10,
+                rating: 4.6,
+                category: 'india'
+            }, {
+                id: 10,
+                name: 'Jaipur City Palace',
+                country: 'India',
+                city: 'Jaipur',
+                description: 'Palace complex in Jaipur with stunning architecture, museums, and courtyards showcasing Rajput heritage.',
+                image: 'images/jaipur-city-palace.jpg',
+                price: 15,
+                rating: 4.7,
+                category: 'india'
+            }, {
+                id: 11,
+                name: 'Mysore Palace',
+                country: 'India',
+                city: 'Mysore',
+                description: 'Former royal residence known for its stunning Indo-Saracenic architecture and grand Durbar Hall.',
+                image: 'C:\Users\tharu\Downloads\pexels-camsbae-gogul-1606744-30513762.jpg',
+                price: 12,
+                rating: 4.5,
+                category: 'india'
+            }, {
+                id: 12,
+                name: 'Gateway of India',
+                country: 'India',
+                city: 'Mumbai',
+                description: 'Iconic arch monument overlooking the Arabian Sea, built during British colonial rule in India.',
+                image: 'images/gateway-of-india.jpg',
+                price: 0,
+                rating: 4.4,
+                category: 'india'
+            }, {
+                id: 13,
+                name: 'Hawa Mahal',
+                country: 'India',
+                city: 'Jaipur',
+                description: 'Palace of Winds with unique five-story exterior resembling a honeycomb with 953 small windows.',
+                image: 'images/hawa-mahal.jpg',
+                price: 8,
+                rating: 4.5,
+                category: 'india'
+            }, {
+                id: 14,
+                name: 'Kerala Backwaters',
+                country: 'India',
+                city: 'Alleppey',
+                description: 'Network of interconnected canals, rivers, lakes and inlets, perfect for houseboat cruises.',
+                image: 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+                price: 40,
+                rating: 4.8,
+                category: 'india'
+            }, {
+                id: 15,
+                name: 'Qutub Minar',
+                country: 'India',
+                city: 'Delhi',
+                description: 'Tallest brick minaret in the world, built in 1193. A UNESCO World Heritage Site.',
+                image: 'images/qutub-minar.jpg',
+                price: 10,
+                rating: 4.6,
+                category: 'india'
+            }, {
+                id: 16,
+                name: 'Ajanta & Ellora Caves',
+                country: 'India',
+                city: 'Aurangabad',
+                description: 'Ancient rock-cut cave monuments featuring paintings and sculptures of Buddhist, Hindu and Jain traditions.',
+                image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+                price: 15,
+                rating: 4.7,
+                category: 'india'
+            }
+        ];
+
+        // DOM Elements
+        const destinationGrid = document.getElementById('destination-grid');
+        const bookingModal = document.getElementById('booking-modal');
+        const paymentModal = document.getElementById('payment-modal');
+        const processingModal = document.getElementById('processing-modal');
+        const confirmationModal = document.getElementById('confirmation-modal');
+        const closeBookingModal = document.getElementById('close-booking-modal');
+        const closePaymentModal = document.getElementById('close-payment-modal');
+        const bookingForm = document.getElementById('booking-form');
+        const proceedToPaymentBtn = document.getElementById('proceed-to-payment');
+        const confirmPaymentBtn = document.getElementById('confirm-payment');
+        const closeConfirmationBtn = document.getElementById('close-confirmation');
+        const bookingNotification = document.getElementById('booking-notification');
+        const paymentNotification = document.getElementById('payment-notification');
+        const searchInput = document.getElementById('search-input');
+        const countryBtns = document.querySelectorAll('.country-btn');
+        const navLinks = document.querySelectorAll('nav a');
+        const logoutBtn = document.getElementById('logout-btn');
+        const welcomeUser = document.getElementById('welcome-user');
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        const creditCardDetails = document.getElementById('credit-card-details');
+
+        // Current user and booking data
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || {
+            username: 'Traveler'
+        };
+        let currentDestination = null;
+        let filteredDestinations = [...destinations];
+        let selectedPaymentMethod = 'credit';
+        let currentBooking = {};
+
+        // Initialize the page
+        function init() {
+            welcomeUser.textContent = `Welcome, ${currentUser.username || 'Traveler'}!`;
+            loadDestinations();
+            setupEventListeners();
+        }
+
+        // Load destinations into the grid
+        function loadDestinations() {
+            destinationGrid.innerHTML = '';
+
+            if (filteredDestinations.length === 0) {
+                destinationGrid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">No destinations found matching your criteria.</p>';
+                return;
+            }
+
+            filteredDestinations.forEach(destination => {
+                const card = document.createElement('div');
+                card.className = 'destination-card';
+
+                // Add India special badge for Indian destinations
+                const indiaBadge = destination.country === 'India' ? '<div class="india-special">Indian Heritage</div>' : '';
+
+                card.innerHTML = `
+                    <div class="destination-image" style="background-image: url('${destination.image}')">
+                        ${indiaBadge}
+                        <div class="destination-price">${destination.price === 0 ? 'FREE' : '$' + destination.price}</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-name">${destination.name}</div>
+                        <div class="destination-location">${destination.city}, ${destination.country}</div>
+                        <div class="destination-rating">
+                            ${'★'.repeat(Math.floor(destination.rating))}${destination.rating % 1 >= 0.5 ? '½' : ''} ${destination.rating}
+                        </div>
+                        <div class="destination-desc">${destination.description}</div>
+                        <button class="btn book-btn" data-id="${destination.id}">Book Now</button>
+                    </div>
+                `;
+
+                destinationGrid.appendChild(card);
+            });
+
+            // Add event listeners to book buttons
+            document.querySelectorAll('.book-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    openBookingModal(id);
+                });
+            });
+        }
+
+        // Open booking modal
+        function openBookingModal(id) {
+            currentDestination = destinations.find(d => d.id === id);
+            if (!currentDestination) return;
+
+            // Update booking summary
+            document.getElementById('summary-destination').textContent = `${currentDestination.name}, ${currentDestination.city}`;
+            document.getElementById('summary-price').textContent = currentDestination.price === 0 ? 'FREE' : `$${currentDestination.price}`;
+            updateBookingSummary();
+
+            bookingModal.style.display = 'flex';
+
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('booking-date').min = today;
+        }
+
+        // Update booking summary when inputs change
+        function updateBookingSummary() {
+            const date = document.getElementById('booking-date').value;
+            const people = parseInt(document.getElementById('booking-people').value) || 1;
+            const price = currentDestination ? currentDestination.price : 0;
+            const total = price * people;
+
+            document.getElementById('summary-date').textContent = date ? new Date(date).toLocaleDateString() : 'Not selected';
+            document.getElementById('summary-travelers').textContent = people;
+            document.getElementById('summary-total').textContent = price === 0 ? 'FREE' : `$${total}`;
+        }
+
+        // Close booking modal
+        function closeBookingModalFunc() {
+            bookingModal.style.display = 'none';
+            bookingForm.reset();
+            bookingNotification.classList.add('hidden');
+            updateBookingSummary();
+        }
+
+        // Close payment modal
+        function closePaymentModalFunc() {
+            paymentModal.style.display = 'none';
+            paymentNotification.classList.add('hidden');
+        }
+
+        // Close processing modal
+        function closeProcessingModal() {
+            processingModal.style.display = 'none';
+        }
+
+        // Close confirmation modal
+        function closeConfirmationModal() {
+            confirmationModal.style.display = 'none';
+            closeBookingModalFunc();
+        }
+
+        // Proceed to payment
+        function proceedToPayment() {
+            const date = document.getElementById('booking-date').value;
+            const people = document.getElementById('booking-people').value;
+            const name = document.getElementById('booking-name').value;
+            const email = document.getElementById('booking-email').value;
+            const phone = document.getElementById('booking-phone').value;
+
+            if (!date || !name || !email || !phone) {
+                showNotification(bookingNotification, 'Please fill in all required fields!', false);
+                return;
+            }
+
+            // Store booking details
+            currentBooking = {
+                destination: currentDestination,
+                date: date,
+                people: parseInt(people),
+                name: name,
+                email: email,
+                phone: phone,
+                requests: document.getElementById('booking-requests').value
+            };
+
+            // Update payment summary
+            document.getElementById('payment-destination').textContent = `${currentDestination.name}, ${currentDestination.city}`;
+            document.getElementById('payment-date').textContent = new Date(date).toLocaleDateString();
+            document.getElementById('payment-travelers').textContent = people;
+            const totalAmount = currentDestination.price * parseInt(people);
+            document.getElementById('payment-total').textContent = currentDestination.price === 0 ? 'FREE' : `$${totalAmount}`;
+
+            // Close booking modal and open payment modal
+            closeBookingModalFunc();
+            paymentModal.style.display = 'flex';
+
+            // For free destinations, skip payment
+            if (currentDestination.price === 0) {
+                setTimeout(() => {
+                    confirmPayment();
+                }, 500);
+            }
+        }
+
+        // Confirm payment
+        function confirmPayment() {
+            if (currentDestination.price > 0) {
+                if (selectedPaymentMethod === 'credit') {
+                    const cardNumber = document.getElementById('card-number').value;
+                    const cardExpiry = document.getElementById('card-expiry').value;
+                    const cardCVV = document.getElementById('card-cvv').value;
+                    const cardName = document.getElementById('card-name').value;
+
+                    if (!cardNumber || !cardExpiry || !cardCVV || !cardName) {
+                        showNotification(paymentNotification, 'Please fill in all payment details!', false);
+                        return;
+                    }
+
+                    if (!isValidCardNumber(cardNumber)) {
+                        showNotification(paymentNotification, 'Please enter a valid card number!', false);
+                        return;
+                    }
+                }
+            }
+
+            // Show processing modal
+            paymentModal.style.display = 'none';
+            processingModal.style.display = 'flex';
+
+            // Simulate payment processing
+            setTimeout(() => {
+                // Show confirmation
+                processingModal.style.display = 'none';
+
+                // Generate random booking reference
+                const ref = 'GE-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
+
+                // Update confirmation details
+                document.getElementById('confirmation-ref').textContent = ref;
+                document.getElementById('confirmation-destination').textContent = `${currentBooking.destination.name}, ${currentBooking.destination.city}`;
+                document.getElementById('confirmation-date').textContent = new Date(currentBooking.date).toLocaleDateString();
+                document.getElementById('confirmation-travelers').textContent = currentBooking.people;
+                const totalAmount = currentBooking.destination.price * currentBooking.people;
+                document.getElementById('confirmation-total').textContent = currentBooking.destination.price === 0 ? 'FREE' : `$${totalAmount}`;
+
+                confirmationModal.style.display = 'flex';
+
+                // In a real app, you would send booking data to a server here
+                console.log('Booking confirmed:', currentBooking);
+
+            }, 3000);
+        }
+
+        // Simple card number validation
+        function isValidCardNumber(number) {
+            // Remove spaces and dashes
+            const cleanNumber = number.replace(/\s+/g, '').replace(/-/g, '');
+            // Check if it's a number and has between 13 and 19 digits
+            return /^\d{13,19}$/.test(cleanNumber);
+        }
+
+        // Filter destinations by country
+        function filterByCountry(country) {
+            if (country === 'all') {
+                filteredDestinations = [...destinations];
+            } else {
+                filteredDestinations = destinations.filter(d =>
+                    d.country.toLowerCase() === country.toLowerCase()
+                );
+            }
+            loadDestinations();
+        }
+
+        // Search destinations
+        function searchDestinations(query) {
+            if (!query) {
+                filteredDestinations = [...destinations];
+            } else {
+                filteredDestinations = destinations.filter(d =>
+                    d.name.toLowerCase().includes(query.toLowerCase()) ||
+                    d.country.toLowerCase().includes(query.toLowerCase()) ||
+                    d.city.toLowerCase().includes(query.toLowerCase()) ||
+                    d.description.toLowerCase().includes(query.toLowerCase())
+                );
+            }
+            loadDestinations();
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Close modals
+            closeBookingModal.addEventListener('click', closeBookingModalFunc);
+            closePaymentModal.addEventListener('click', closePaymentModalFunc);
+            closeConfirmationBtn.addEventListener('click', closeConfirmationModal);
+
+            // Close modals when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === bookingModal) {
+                    closeBookingModalFunc();
+                }
+                if (e.target === paymentModal) {
+                    closePaymentModalFunc();
+                }
+                if (e.target === processingModal) {
+                    // Don't allow closing processing modal
+                }
+                if (e.target === confirmationModal) {
+                    closeConfirmationModal();
+                }
+            });
+
+            // Update booking summary when inputs change
+            document.getElementById('booking-date').addEventListener('change', updateBookingSummary);
+            document.getElementById('booking-people').addEventListener('change', updateBookingSummary);
+
+            // Proceed to payment button
+            proceedToPaymentBtn.addEventListener('click', proceedToPayment);
+
+            // Confirm payment button
+            confirmPaymentBtn.addEventListener('click', confirmPayment);
+
+            // Payment method selection
+            paymentMethods.forEach(method => {
+                method.addEventListener('click', function() {
+                    paymentMethods.forEach(m => m.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedPaymentMethod = this.getAttribute('data-method');
+
+                    // Show/hide credit card details based on selection
+                    if (selectedPaymentMethod === 'credit') {
+                        creditCardDetails.style.display = 'block';
+                    } else {
+                        creditCardDetails.style.display = 'none';
+                    }
+                });
+            });
+
+            // Country filter buttons
+            countryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    countryBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    filterByCountry(this.getAttribute('data-country'));
+                });
+            });
+
+            // Search input
+            searchInput.addEventListener('input', function() {
+                searchDestinations(this.value);
+            });
+
+            // Navigation
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const tab = this.getAttribute('data-tab');
+                    if (tab === 'europe') {
+                        filteredDestinations = destinations.filter(d => d.category === 'europe');
+                    } else if (tab === 'asia') {
+                        filteredDestinations = destinations.filter(d => d.category === 'asia');
+                    } else if (tab === 'india') {
+                        filteredDestinations = destinations.filter(d => d.category === 'india');
+                    } else if (tab === 'americas') {
+                        filteredDestinations = destinations.filter(d => d.category === 'americas');
+                    } else if (tab === 'my-bookings') {
+                        // In a real app, you would fetch user's bookings
+                        alert('My Bookings feature would show your confirmed tours here.');
+                        return;
+                    } else {
+                        filteredDestinations = [...destinations];
+                    }
+
+                    loadDestinations();
+                });
+            });
+
+            // Logout
+            logoutBtn.addEventListener('click', function() {
+                localStorage.removeItem('currentUser');
+                alert('You have been logged out. In a real application, you would be redirected to the login page.');
+            });
+        }
+
+        // Show notification
+        function showNotification(element, message, isSuccess) {
+            element.textContent = message;
+            element.className = `notification ${isSuccess ? 'success' : isSuccess === false ? 'error' : 'info'}`;
+            element.classList.remove('hidden');
+        }
+
+        // Initialize the application
+        init();
+    </script>
+</body>
+
+</html>
